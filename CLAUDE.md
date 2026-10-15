@@ -3,7 +3,7 @@
 Streetwear brand storefront ("Know What 2 Do", KW2D, Vancouver). Migrating from a Shopify theme to a modern web app.
 
 ## Source being migrated
-`../kw2d-theme/theme_export__knowswhat2do-com-kw2d-ayos-design__21JUN2026-0544pm/` is a Shopify **Horizon** theme (Liquid) with custom KW2D parts. Reference only; do not edit it.
+`kw2d-theme/theme_export__knowswhat2do-com-kw2d-ayos-design__21JUN2026-0544pm/` is a Shopify **Horizon** theme (Liquid) with custom KW2D parts. Reference only; do not edit it.
 - Custom: `sections/kw2d-slideshow`, `kw2d-drop-showcase`, `kw2d-waitlist-popup`, `kw2d-launch-hero`, `blocks/kw2d-countdown`, `layout/password.liquid` (coming-soon page with countdown).
 - Stock Horizon: header/footer groups, product, collection, cart (drawer), search, blog, contact, 404 templates.
 - Assets: `assets/CatalogIMG*.jpg` (hero slideshow), `Drop1IMG*.jpeg` (Meisai hoodie drop).

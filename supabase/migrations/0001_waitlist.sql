@@ -8,3 +8,5 @@ create table if not exists public.waitlist (
 
 -- Only the server (service role) writes; no public access.
 alter table public.waitlist enable row level security;
+
+grant all on table public.waitlist to service_role;
