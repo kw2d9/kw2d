@@ -21,6 +21,7 @@ type CartCtx = {
   setOpen: (o: boolean) => void;
   add: (line: Omit<CartLine, "qty">) => void;
   setQty: (variantId: string, qty: number) => void;
+  clear: () => void;
 };
 
 const Ctx = createContext<CartCtx | null>(null);
@@ -70,6 +71,8 @@ export default function CartProvider({ children }: { children: React.ReactNode }
     );
   }, []);
 
+  const clear = useCallback(() => setLines([]), []);
+
   const value = useMemo<CartCtx>(
     () => ({
       lines,
@@ -79,8 +82,9 @@ export default function CartProvider({ children }: { children: React.ReactNode }
       setOpen,
       add,
       setQty,
+      clear,
     }),
-    [lines, open, add, setQty],
+    [lines, open, add, setQty, clear],
   );
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

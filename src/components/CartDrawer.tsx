@@ -2,12 +2,31 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "./CartProvider";
 import { formatPrice } from "@/lib/format";
 
 export default function CartDrawer() {
   const { lines, open, setOpen, setQty, subtotalCents } = useCart();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function checkout() {
+    setBusy(true);
+    setError("");
+    const res = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ items: lines.map((l) => ({ variantId: l.variantId, qty: l.qty })) }),
+    }).catch(() => null);
+    const data = await res?.json().catch(() => null);
+    if (res?.ok && data?.url) {
+      window.location.href = data.url;
+      return;
+    }
+    setError(data?.error ?? "Could not start checkout. Please try again.");
+    setBusy(false);
+  }
 
   useEffect(() => {
     if (!open) return;
@@ -73,9 +92,13 @@ export default function CartDrawer() {
                 <span>{formatPrice(subtotalCents, lines[0].currency)}</span>
               </div>
               <p className="mb-4 text-[9px] uppercase tracking-[0.18em] opacity-50">Shipping and taxes calculated at checkout.</p>
-              {/* Stripe checkout is wired up once Stripe keys exist. */}
-              <button disabled className="w-full bg-ink py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white disabled:opacity-50">
-                Checkout · Coming Soon
+              {error && <p className="mb-3 text-xs text-red-700" role="alert">{error}</p>}
+              <button
+                onClick={checkout}
+                disabled={busy}
+                className="w-full bg-ink py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition hover:opacity-80 disabled:opacity-50"
+              >
+                {busy ? "Redirecting…" : "Checkout"}
               </button>
             </div>
           </>
