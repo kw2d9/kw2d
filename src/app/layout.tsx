@@ -3,6 +3,8 @@ import { Barlow, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import CartProvider from "@/components/CartProvider";
+import CartDrawer from "@/components/CartDrawer";
 import WaitlistPopup from "@/components/WaitlistPopup";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
@@ -21,10 +23,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${inter.variable} ${barlow.variable} antialiased`}>
       <body className="flex min-h-screen flex-col">
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <WaitlistPopup />
+        <CartProvider>
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <CartDrawer />
+          <WaitlistPopup />
+        </CartProvider>
       </body>
     </html>
   );

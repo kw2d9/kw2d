@@ -49,7 +49,7 @@ async function Product({ params }: { params: PageProps<"/products/[handle]">["pa
           </div>
         )}
         {p.description && <p className="max-w-md text-sm leading-relaxed opacity-80">{p.description}</p>}
-        <ProductPurchase variants={p.variants} preorder={p.preorder} />
+        <ProductPurchase product={p} />
         {p.fit_note && <p className="text-[9px] uppercase tracking-[0.18em] opacity-40">{p.fit_note}</p>}
       </div>
     </div>

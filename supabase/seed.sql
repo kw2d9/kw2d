@@ -18,6 +18,6 @@ values (
 insert into public.product_variants (product_id, size, sort_order)
 select p.id, s.size, s.ord
 from public.products p,
-  (values ('S',1),('M',2),('L',3),('XL',4),('XXL',5)) as s(size, ord)
+  (values ('XS',0),('S',1),('M',2),('L',3),('XL',4),('XXL',5)) as s(size, ord)
 where p.handle = 'kw2d-meisai-collection-hoodie'
 on conflict (product_id, size) do nothing;

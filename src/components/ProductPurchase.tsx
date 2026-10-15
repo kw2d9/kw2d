@@ -1,11 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import type { Variant } from "@/lib/products";
+import type { Product } from "@/lib/products";
+import { useCart } from "./CartProvider";
 
-export default function ProductPurchase({ variants, preorder }: { variants: Variant[]; preorder: boolean }) {
+export default function ProductPurchase({ product }: { product: Product }) {
+  const { variants, preorder } = product;
+  const { add } = useCart();
   const [size, setSize] = useState<string | null>(null);
-  const soldOut = (v: Variant) => v.inventory !== null && v.inventory <= 0;
+  const selected = variants.find((v) => v.size === size);
+  const soldOut = (v: Product["variants"][number]) => v.inventory !== null && v.inventory <= 0;
 
   return (
     <div className="flex w-full flex-col gap-5">
@@ -28,13 +32,24 @@ export default function ProductPurchase({ variants, preorder }: { variants: Vari
           ))}
         </div>
       </fieldset>
-      {/* Cart + Stripe checkout come in the next slice. */}
       <button
         type="button"
-        disabled
-        className="bg-ink px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white disabled:opacity-50"
+        disabled={!selected}
+        onClick={() =>
+          selected &&
+          add({
+            variantId: selected.id,
+            handle: product.handle,
+            title: product.title,
+            size: selected.size,
+            image: product.images[0],
+            priceCents: product.price_cents,
+            currency: product.currency,
+          })
+        }
+        className="bg-ink px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition disabled:opacity-40"
       >
-        {preorder ? "Pre-Order" : "Add to Cart"} · Coming Soon
+        {preorder ? "Pre-Order" : "Add to Cart"}
       </button>
       {!size && <p className="text-[9px] uppercase tracking-[0.18em] opacity-40">Select a size</p>}
     </div>

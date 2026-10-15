@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CartButton from "./CartButton";
 
 const links = [
   { href: "/", label: "Home" },
@@ -19,7 +20,7 @@ export default function Header() {
           </Link>
         ))}
       </nav>
-      <span className="text-xs">CAD</span>
+      <CartButton />
     </header>
   );
 }

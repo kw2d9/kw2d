@@ -1,6 +1,8 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { supabaseAdmin } from "@/lib/supabase";
 
+export { formatPrice } from "@/lib/format";
+
 export type Variant = { id: string; size: string; inventory: number | null };
 export type Product = {
   id: string;
@@ -31,10 +33,6 @@ function normalize(row: Row): Product {
       .sort((a, b) => a.sort_order - b.sort_order)
       .map(({ id, size, inventory }) => ({ id, size, inventory })),
   };
-}
-
-export function formatPrice(cents: number, currency = "CAD") {
-  return `$${(cents / 100).toFixed(cents % 100 ? 2 : 0)} ${currency}`;
 }
 
 export async function getProducts(): Promise<Product[]> {
