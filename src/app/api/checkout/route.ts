@@ -3,6 +3,7 @@ import { z } from "zod";
 import { supabaseAdmin } from "@/lib/supabase";
 import { siteUrl, stripe } from "@/lib/stripe";
 import { shipping, site } from "@/lib/config";
+import { imageSrc } from "@/lib/images";
 
 const body = z.object({
   items: z
@@ -63,7 +64,7 @@ export async function POST(req: Request) {
           unit_amount: r.product.price_cents,
           product_data: {
             name: `${r.product.title} (${r.size})`,
-            ...(r.product.images[0] && base.startsWith("https") ? { images: [`${base}/images/${r.product.images[0]}`] } : {}),
+            ...(r.product.images[0] && (base.startsWith("https") || /^https?:/.test(r.product.images[0])) ? { images: [/^https?:/.test(imageSrc(r.product.images[0])) ? imageSrc(r.product.images[0]) : `${base}${imageSrc(r.product.images[0])}`] } : {}),
             metadata: { variant_id: r.id, title: r.product.title, size: r.size },
           },
         },

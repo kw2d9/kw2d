@@ -27,3 +27,11 @@ Built: home, catalog, product pages, cart drawer (localStorage), Stripe Checkout
 - Stripe tax is off until `STRIPE_AUTOMATIC_TAX=true` and Stripe Tax is set up in the dashboard.
 - DB migrations are in `supabase/migrations/` (apply with `psql "$DATABASE_URL" -f ...`); `supabase/seed.sql` seeds the Meisai hoodie.
 - Next 16 with Cache Components: no `new Date()` or uncached data in prerendered components outside Suspense or `use cache`.
+
+## Admin (`/admin`)
+Product CRUD with image upload. Sign-in is Supabase Auth (email + password); admin = `app_metadata.role = "admin"` on the auth user (cannot be set by a public signup).
+- Create the user in Supabase (Authentication -> Users -> Add user, auto-confirm), then grant access: edit the email in `supabase/make-admin.sql` and run `psql "$DATABASE_URL" -f supabase/make-admin.sql`.
+- Needs `SUPABASE_PUBLISHABLE_KEY` (sign-in) plus the existing `SUPABASE_URL` / `SUPABASE_SECRET_KEY`.
+- Security layers: `src/proxy.ts` redirects non-admins; every admin page uses `requireAdmin()` / `adminDb()` (layouts do NOT protect pages, they render in parallel); every server action and `/api/admin/upload` call `assertAdmin()`. Keep all three when adding admin pages.
+- Uploads go to the public Supabase Storage bucket `product-images` (resized in the browser); removing an image or deleting a product deletes its files.
+- The public site lives in `src/app/(site)`; admin pages deliberately do not get the storefront header, cart or popup.

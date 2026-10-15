@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { imageSrc } from "@/lib/images";
 import Link from "next/link";
 import { Suspense } from "react";
 import type { Metadata } from "next";
@@ -18,7 +19,7 @@ async function Grid() {
           <Link href={`/products/${p.handle}`} className="group block">
             <div className="relative aspect-[4/5] overflow-hidden bg-white">
               <Image
-                src={`/images/${p.images[0]}`}
+                src={imageSrc(p.images[0])}
                 alt={p.title}
                 fill
                 sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"

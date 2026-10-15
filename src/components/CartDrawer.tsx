@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useCart } from "./CartProvider";
 import { formatPrice } from "@/lib/format";
+import { imageSrc } from "@/lib/images";
 
 export default function CartDrawer() {
   const { lines, open, setOpen, setQty, subtotalCents } = useCart();
@@ -64,7 +65,7 @@ export default function CartDrawer() {
               {lines.map((l) => (
                 <li key={l.variantId} className="flex gap-4 py-5">
                   <div className="relative h-24 w-20 shrink-0 bg-white">
-                    <Image src={`/images/${l.image}`} alt={l.title} fill sizes="80px" className="object-cover" />
+                    <Image src={imageSrc(l.image)} alt={l.title} fill sizes="80px" className="object-cover" />
                   </div>
                   <div className="flex flex-1 flex-col gap-1">
                     <Link href={`/products/${l.handle}`} onClick={() => setOpen(false)} className="font-heading text-sm font-bold uppercase tracking-wide hover:opacity-70">

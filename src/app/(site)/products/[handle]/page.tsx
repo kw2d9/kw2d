@@ -2,6 +2,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { imageSrc } from "@/lib/images";
 import ProductPurchase from "@/components/ProductPurchase";
 import { formatPrice, getProduct, getProducts } from "@/lib/products";
 
@@ -28,12 +29,12 @@ async function Product({ params }: { params: PageProps<"/products/[handle]">["pa
       <div className="grid grid-cols-2 gap-3">
         {p.images.map((src, i) => (
           <div key={src} className={`relative bg-white ${i === 0 ? "col-span-2 aspect-[4/3]" : "aspect-[4/5]"}`}>
-            <Image src={`/images/${src}`} alt={`${p.title} ${i + 1}`} fill priority={i === 0} sizes="(min-width: 768px) 36vw, 100vw" className="object-cover" />
+            <Image src={imageSrc(src)} alt={`${p.title} ${i + 1}`} fill priority={i === 0} sizes="(min-width: 768px) 36vw, 100vw" className="object-cover" />
           </div>
         ))}
         {p.size_chart_image && (
           <div className="relative col-span-2 aspect-[4/3] bg-white">
-            <Image src={`/images/${p.size_chart_image}`} alt={`${p.title} size chart`} fill sizes="(min-width: 768px) 36vw, 100vw" className="object-contain" />
+            <Image src={imageSrc(p.size_chart_image)} alt={`${p.title} size chart`} fill sizes="(min-width: 768px) 36vw, 100vw" className="object-contain" />
           </div>
         )}
       </div>
