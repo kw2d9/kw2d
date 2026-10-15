@@ -37,7 +37,7 @@ export default function DropShowcase() {
       </div>
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6">
         {grid.map((g) => (
-          <div key={g.src} className="relative h-[42vw] md:h-[50vh]">
+          <div key={g.src} className="relative h-[42vw] last:col-span-2 last:h-[56vw] md:h-[50vh] md:last:col-span-1 md:last:h-[50vh]">
             <Image src={`/images/${g.src}`} alt={g.alt} fill className="object-cover" sizes="(min-width: 768px) 33vw, 50vw" />
           </div>
         ))}

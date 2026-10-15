@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { supabaseAdmin } from "@/lib/supabase";
 import { siteUrl, stripe } from "@/lib/stripe";
+import { shipping, site } from "@/lib/config";
 
 const body = z.object({
   items: z
@@ -49,6 +50,9 @@ export async function POST(req: Request) {
   }
 
   const base = siteUrl(req);
+  const currency = rows[0].product.currency.toLowerCase();
+  const subtotal = rows.reduce((n, r) => n + r.product.price_cents * qtyById.get(r.id)!, 0);
+  const shippingCents = subtotal >= shipping.freeOverCents ? 0 : shipping.flatCents;
   try {
     const session = await stripe().checkout.sessions.create({
       mode: "payment",
@@ -64,7 +68,23 @@ export async function POST(req: Request) {
           },
         },
       })),
-      shipping_address_collection: { allowed_countries: ["CA", "US"] },
+      shipping_address_collection: { allowed_countries: [...site.shipsTo] },
+      shipping_options: [
+        {
+          shipping_rate_data: {
+            type: "fixed_amount",
+            display_name: shippingCents === 0 ? `${shipping.label} (free)` : shipping.label,
+            fixed_amount: { amount: shippingCents, currency },
+            delivery_estimate: {
+              minimum: { unit: "business_day", value: shipping.minDays },
+              maximum: { unit: "business_day", value: shipping.maxDays },
+            },
+          },
+        },
+      ],
+      allow_promotion_codes: true,
+      // Enable once Stripe Tax is configured in the dashboard (set STRIPE_AUTOMATIC_TAX=true).
+      ...(process.env.STRIPE_AUTOMATIC_TAX === "true" ? { automatic_tax: { enabled: true } } : {}),
       invoice_creation: { enabled: true },
       phone_number_collection: { enabled: false },
       success_url: `${base}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,

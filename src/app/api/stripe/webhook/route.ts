@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { supabaseAdmin } from "@/lib/supabase";
 import { stripe } from "@/lib/stripe";
+import { orderEmail, sendEmail } from "@/lib/email";
 
 export async function POST(req: Request) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -58,6 +59,29 @@ export async function POST(req: Request) {
       if (itemsError) {
         console.error("order items insert failed", itemsError.message);
         return NextResponse.json({ error: "db" }, { status: 500 });
+      }
+
+      // Confirmation email, once per order (retries and resends skip it).
+      const { data: claimed } = await db
+        .from("orders")
+        .update({ confirmation_sent_at: new Date().toISOString() })
+        .eq("id", order.id)
+        .is("confirmation_sent_at", null)
+        .select("id");
+      if (claimed?.length && s.customer_details?.email) {
+        const ok = await sendEmail({
+          to: s.customer_details.email,
+          ...orderEmail({
+            name: s.customer_details.name,
+            items: items.data.map((li) => {
+              const p = li.price?.product as Stripe.Product | undefined;
+              return { title: p?.metadata?.title ?? li.description ?? "Item", size: p?.metadata?.size, qty: li.quantity ?? 1 };
+            }),
+            totalCents: s.amount_total ?? 0,
+            currency: s.currency ?? "cad",
+          }),
+        });
+        if (!ok) await db.from("orders").update({ confirmation_sent_at: null }).eq("id", order.id);
       }
     }
   }

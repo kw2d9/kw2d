@@ -19,3 +19,11 @@ Next.js (App Router) + TypeScript + Tailwind CSS + Supabase (Postgres, auth, sto
 - Secrets only in `.env.local` (gitignored); never commit them.
 - Commits are authored solely by the user, with no Claude/AI attribution.
 - Record any mistake made twice in `MISTAKES.md`.
+
+## Status
+Built: home, catalog, product pages, cart drawer (localStorage), Stripe Checkout (CAD, flat shipping, `KW2D10` promo code, invoices), Stripe webhook saving orders, waitlist + contact (Supabase), policy pages, `/coming-soon` countdown, sitemap/robots.
+- Business settings (shipping rates, support email, drop date, promo code) live in `src/lib/config.ts`.
+- Emails go through Resend (`src/lib/email.ts`) and are skipped when `RESEND_API_KEY` is unset.
+- Stripe tax is off until `STRIPE_AUTOMATIC_TAX=true` and Stripe Tax is set up in the dashboard.
+- DB migrations are in `supabase/migrations/` (apply with `psql "$DATABASE_URL" -f ...`); `supabase/seed.sql` seeds the Meisai hoodie.
+- Next 16 with Cache Components: no `new Date()` or uncached data in prerendered components outside Suspense or `use cache`.
