@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useCart } from "./CartProvider";
 import { formatPrice } from "@/lib/format";
 import { imageSrc } from "@/lib/images";
+import { checkoutEnabled, OPEN_WAITLIST_EVENT } from "@/lib/config";
 
 export default function CartDrawer() {
   const { lines, open, setOpen, setQty, subtotalCents } = useCart();
@@ -93,14 +94,31 @@ export default function CartDrawer() {
                 <span>{formatPrice(subtotalCents, lines[0].currency)}</span>
               </div>
               <p className="mb-4 text-[9px] uppercase tracking-[0.18em] opacity-50">Shipping and taxes calculated at checkout.</p>
-              {error && <p className="mb-3 text-xs text-red-700" role="alert">{error}</p>}
-              <button
-                onClick={checkout}
-                disabled={busy}
-                className="w-full bg-ink py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition hover:opacity-80 disabled:opacity-50"
-              >
-                {busy ? "Redirecting…" : "Checkout"}
-              </button>
+              {checkoutEnabled ? (
+                <>
+                  {error && <p className="mb-3 text-xs text-red-700" role="alert">{error}</p>}
+                  <button
+                    onClick={checkout}
+                    disabled={busy}
+                    className="w-full bg-ink py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition hover:opacity-80 disabled:opacity-50"
+                  >
+                    {busy ? "Redirecting…" : "Checkout"}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="mb-3 text-xs leading-relaxed">Pre-orders aren&apos;t open yet. Join the waitlist and we&apos;ll email you the moment they are, with 10% off.</p>
+                  <button
+                    onClick={() => {
+                      setOpen(false);
+                      window.dispatchEvent(new Event(OPEN_WAITLIST_EVENT));
+                    }}
+                    className="w-full bg-ink py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition hover:opacity-80"
+                  >
+                    Join the Waitlist
+                  </button>
+                </>
+              )}
             </div>
           </>
         )}

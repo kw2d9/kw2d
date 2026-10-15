@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { supabaseAdmin } from "@/lib/supabase";
 import { siteUrl, stripe } from "@/lib/stripe";
-import { shipping, site } from "@/lib/config";
+import { checkoutEnabled, shipping, site } from "@/lib/config";
 import { imageSrc } from "@/lib/images";
 
 const body = z.object({
@@ -20,6 +20,9 @@ type VariantRow = {
 };
 
 export async function POST(req: Request) {
+  if (!checkoutEnabled) {
+    return NextResponse.json({ error: "Checkout is not open yet. Join the waitlist to be first." }, { status: 503 });
+  }
   const parsed = body.safeParse(await req.json().catch(() => null));
   if (!parsed.success) return NextResponse.json({ error: "Invalid cart." }, { status: 400 });
 

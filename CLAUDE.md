@@ -35,3 +35,6 @@ Product CRUD with image upload. Sign-in is Supabase Auth (email + password); adm
 - Security layers: `src/proxy.ts` redirects non-admins; every admin page uses `requireAdmin()` / `adminDb()` (layouts do NOT protect pages, they render in parallel); every server action and `/api/admin/upload` call `assertAdmin()`. Keep all three when adding admin pages.
 - Uploads go to the public Supabase Storage bucket `product-images` (resized in the browser); removing an image or deleting a product deletes its files.
 - The public site lives in `src/app/(site)`; admin pages deliberately do not get the storefront header, cart or popup.
+
+## Checkout switch
+`NEXT_PUBLIC_CHECKOUT_ENABLED` (default off). While off, the buy buttons become "Join the Waitlist" (opens the popup via the `kw2d:open-waitlist` event) and `/api/checkout` returns 503. Set it to `true` in Vercel and redeploy once Stripe live keys, the production webhook and (optionally) `STRIPE_AUTOMATIC_TAX` are ready. It is inlined at build time, so a redeploy is required.

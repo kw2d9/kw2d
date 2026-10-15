@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { OPEN_WAITLIST_EVENT } from "@/lib/config";
 
 const KEY = "kw2d_popup_seen";
 
@@ -19,6 +20,12 @@ export default function WaitlistPopup({ delayMs = 3000 }: { delayMs?: number }) 
     const t = setTimeout(() => setOpen(true), delayMs);
     return () => clearTimeout(t);
   }, [delayMs]);
+
+  useEffect(() => {
+    const show = () => setOpen(true);
+    window.addEventListener(OPEN_WAITLIST_EVENT, show);
+    return () => window.removeEventListener(OPEN_WAITLIST_EVENT, show);
+  }, []);
 
   useEffect(() => {
     if (!open) return;

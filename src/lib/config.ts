@@ -1,3 +1,9 @@
+/** Checkout stays closed until NEXT_PUBLIC_CHECKOUT_ENABLED=true (set it, then redeploy). */
+export const checkoutEnabled = process.env.NEXT_PUBLIC_CHECKOUT_ENABLED === "true";
+
+/** Event that opens the waitlist popup from anywhere on the page. */
+export const OPEN_WAITLIST_EVENT = "kw2d:open-waitlist";
+
 /** Business settings in one place. Change values here, not in components. */
 export const site = {
   name: "KW2D",

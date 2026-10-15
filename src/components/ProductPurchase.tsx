@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { Product } from "@/lib/products";
 import { useCart } from "./CartProvider";
+import { checkoutEnabled, OPEN_WAITLIST_EVENT } from "@/lib/config";
 
 export default function ProductPurchase({ product }: { product: Product }) {
   const { variants, preorder } = product;
@@ -32,26 +33,39 @@ export default function ProductPurchase({ product }: { product: Product }) {
           ))}
         </div>
       </fieldset>
-      <button
-        type="button"
-        disabled={!selected}
-        onClick={() =>
-          selected &&
-          add({
-            variantId: selected.id,
-            handle: product.handle,
-            title: product.title,
-            size: selected.size,
-            image: product.images[0],
-            priceCents: product.price_cents,
-            currency: product.currency,
-          })
-        }
-        className="bg-ink px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition disabled:opacity-40"
-      >
-        {preorder ? "Pre-Order" : "Add to Cart"}
-      </button>
-      {!size && <p className="text-[9px] uppercase tracking-[0.18em] opacity-40">Select a size</p>}
+      {checkoutEnabled ? (
+        <button
+          type="button"
+          disabled={!selected}
+          onClick={() =>
+            selected &&
+            add({
+              variantId: selected.id,
+              handle: product.handle,
+              title: product.title,
+              size: selected.size,
+              image: product.images[0],
+              priceCents: product.price_cents,
+              currency: product.currency,
+            })
+          }
+          className="bg-ink px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition disabled:opacity-40"
+        >
+          {preorder ? "Pre-Order" : "Add to Cart"}
+        </button>
+      ) : (
+        <>
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event(OPEN_WAITLIST_EVENT))}
+            className="bg-ink px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition hover:opacity-80"
+          >
+            Join the Waitlist
+          </button>
+          <p className="text-[9px] uppercase tracking-[0.18em] opacity-60">Pre-orders open soon. Get 10% off when you join.</p>
+        </>
+      )}
+      {checkoutEnabled && !size && <p className="text-[9px] uppercase tracking-[0.18em] opacity-40">Select a size</p>}
     </div>
   );
 }
