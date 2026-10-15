@@ -13,6 +13,10 @@ export const site = {
   waitlistDiscountCode: "KW2D10",
   // Set to the real next drop date; the /coming-soon page counts down to it.
   dropDate: process.env.NEXT_PUBLIC_DROP_DATE ?? "2026-12-01T17:00:00.000Z",
+  // Shows the light/dark switch on the storefront. Set to false once a theme is picked
+  // (and set defaultTheme to the winner).
+  themeToggle: true,
+  defaultTheme: "dark" as "light" | "dark",
 };
 
 /** Flat shipping, in cents. TODO: confirm real rates. */

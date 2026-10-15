@@ -30,7 +30,7 @@ export async function sendEmail({ to, subject, html }: Mail): Promise<boolean> {
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
 function layout(inner: string) {
-  return `<div style="background:#f7e5d7;padding:32px 16px;font-family:Helvetica,Arial,sans-serif;color:#180b02">
+  return `<div style="background:#dcdbd8;padding:32px 16px;font-family:Helvetica,Arial,sans-serif;color:#0a0a0a">
   <div style="max-width:480px;margin:0 auto;background:#0a0a0a;color:#fff;padding:40px 32px">
     <p style="letter-spacing:.35em;font-size:10px;text-transform:uppercase;opacity:.5;margin:0 0 16px">${site.name}</p>
     ${inner}

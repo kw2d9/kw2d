@@ -1,26 +1,20 @@
 import Link from "next/link";
 import CartButton from "./CartButton";
-
-const links = [
-  { href: "/", label: "Home" },
-  { href: "/catalog", label: "Catalog" },
-  { href: "/contact", label: "Contact" },
-];
+import NavLinks from "./NavLinks";
+import ThemeToggle from "./ThemeToggle";
+import { site } from "@/lib/config";
 
 export default function Header() {
   return (
-    <header className="absolute inset-x-0 top-0 z-20 flex items-center justify-between px-6 py-5 text-sm text-black">
-      <Link href="/" className="font-semibold tracking-tight">
+    <header className="absolute inset-x-0 top-0 z-20 flex items-center justify-between px-6 py-5 text-sm text-white mix-blend-difference">
+      <Link href="/" className="font-heading text-lg font-black tracking-tight transition-opacity hover:opacity-70">
         KW2D
       </Link>
-      <nav className="hidden gap-6 md:flex">
-        {links.map((l) => (
-          <Link key={l.href} href={l.href} className="hover:opacity-70">
-            {l.label}
-          </Link>
-        ))}
-      </nav>
-      <CartButton />
+      <NavLinks />
+      <div className="flex items-center gap-4">
+        {site.themeToggle && <ThemeToggle />}
+        <CartButton />
+      </div>
     </header>
   );
 }

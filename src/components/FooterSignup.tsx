@@ -27,12 +27,12 @@ export default function FooterSignup() {
   return (
     <form onSubmit={submit} className="w-full max-w-md" noValidate>
       <div className="flex gap-2">
-        <input type="email" name="email" placeholder="Email address" aria-label="Email address" autoComplete="email" className="flex-1 rounded-full bg-white/60 px-5 py-3 text-sm outline-none" />
-        <button disabled={state === "sending"} className="rounded-full bg-[#a3d9a5] px-5 text-lg disabled:opacity-50" aria-label="Sign up">
+        <input type="email" name="email" placeholder="Email address" aria-label="Email address" autoComplete="email" className="flex-1 border border-ink/20 bg-field px-5 py-3 focus:border-ink text-sm outline-none" />
+        <button disabled={state === "sending"} className="bg-ink px-5 text-lg text-paper disabled:opacity-50" aria-label="Sign up">
           →
         </button>
       </div>
-      {error && <p className="mt-2 text-xs text-red-700" role="alert">{error}</p>}
+      {error && <p className="mt-2 text-xs text-danger" role="alert">{error}</p>}
     </form>
   );
 }

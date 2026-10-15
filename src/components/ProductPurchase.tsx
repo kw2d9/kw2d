@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Product } from "@/lib/products";
+import type { Product } from "@/lib/product-types";
 import { useCart } from "./CartProvider";
 import { checkoutEnabled, OPEN_WAITLIST_EVENT } from "@/lib/config";
 
@@ -25,7 +25,7 @@ export default function ProductPurchase({ product }: { product: Product }) {
               aria-pressed={size === v.size}
               onClick={() => setSize(v.size)}
               className={`min-w-14 border px-4 py-3 text-xs font-semibold uppercase tracking-wider transition disabled:line-through disabled:opacity-30 ${
-                size === v.size ? "border-ink bg-ink text-white" : "border-ink/30 hover:border-ink"
+                size === v.size ? "border-ink bg-ink text-paper" : "border-ink/30 hover:border-ink"
               }`}
             >
               {v.size}
@@ -49,7 +49,7 @@ export default function ProductPurchase({ product }: { product: Product }) {
               currency: product.currency,
             })
           }
-          className="bg-ink px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition disabled:opacity-40"
+          className="bg-ink px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-paper transition disabled:opacity-40"
         >
           {preorder ? "Pre-Order" : "Add to Cart"}
         </button>
@@ -58,7 +58,7 @@ export default function ProductPurchase({ product }: { product: Product }) {
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event(OPEN_WAITLIST_EVENT))}
-            className="bg-ink px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition hover:opacity-80"
+            className="bg-ink px-10 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-paper transition hover:opacity-80"
           >
             Join the Waitlist
           </button>

@@ -41,14 +41,14 @@ export default function CartDrawer() {
     <div className={`fixed inset-0 z-[9999] ${open ? "" : "pointer-events-none"}`} aria-hidden={!open}>
       <div
         onClick={() => setOpen(false)}
-        className={`absolute inset-0 bg-black/50 transition-opacity ${open ? "opacity-100" : "opacity-0"}`}
+        className={`absolute inset-0 bg-foreground/50 transition-opacity ${open ? "opacity-100" : "opacity-0"}`}
       />
       <aside
         role="dialog"
         aria-label="Cart"
         className={`absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-background transition-transform duration-300 ${open ? "translate-x-0" : "translate-x-full"}`}
       >
-        <div className="flex items-center justify-between border-b border-[#eaba95] px-6 py-5">
+        <div className="flex items-center justify-between border-b border-line px-6 py-5">
           <h2 className="font-heading text-lg font-black uppercase tracking-wide">Cart</h2>
           <button onClick={() => setOpen(false)} aria-label="Close cart" className="text-lg opacity-60 hover:opacity-100">✕</button>
         </div>
@@ -56,13 +56,13 @@ export default function CartDrawer() {
         {lines.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
             <p className="text-sm opacity-60">Your cart is empty.</p>
-            <Link href="/catalog" onClick={() => setOpen(false)} className="bg-ink px-8 py-3 text-[10px] font-bold uppercase tracking-[0.25em] text-white">
+            <Link href="/catalog" onClick={() => setOpen(false)} className="bg-ink px-8 py-3 text-[10px] font-bold uppercase tracking-[0.25em] text-paper">
               Shop the Catalog
             </Link>
           </div>
         ) : (
           <>
-            <ul className="flex-1 divide-y divide-[#eaba95] overflow-y-auto px-6">
+            <ul className="flex-1 divide-y divide-line overflow-y-auto px-6">
               {lines.map((l) => (
                 <li key={l.variantId} className="flex gap-4 py-5">
                   <div className="relative h-24 w-20 shrink-0 bg-white">
@@ -88,7 +88,7 @@ export default function CartDrawer() {
                 </li>
               ))}
             </ul>
-            <div className="border-t border-[#eaba95] px-6 py-5">
+            <div className="border-t border-line px-6 py-5">
               <div className="mb-4 flex justify-between text-sm font-bold">
                 <span className="uppercase tracking-wider">Subtotal</span>
                 <span>{formatPrice(subtotalCents, lines[0].currency)}</span>
@@ -96,11 +96,11 @@ export default function CartDrawer() {
               <p className="mb-4 text-[9px] uppercase tracking-[0.18em] opacity-50">Shipping and taxes calculated at checkout.</p>
               {checkoutEnabled ? (
                 <>
-                  {error && <p className="mb-3 text-xs text-red-700" role="alert">{error}</p>}
+                  {error && <p className="mb-3 text-xs text-danger" role="alert">{error}</p>}
                   <button
                     onClick={checkout}
                     disabled={busy}
-                    className="w-full bg-ink py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition hover:opacity-80 disabled:opacity-50"
+                    className="w-full bg-ink py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-paper transition hover:opacity-80 disabled:opacity-50"
                   >
                     {busy ? "Redirecting…" : "Checkout"}
                   </button>
@@ -113,7 +113,7 @@ export default function CartDrawer() {
                       setOpen(false);
                       window.dispatchEvent(new Event(OPEN_WAITLIST_EVENT));
                     }}
-                    className="w-full bg-ink py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-white transition hover:opacity-80"
+                    className="w-full bg-ink py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-paper transition hover:opacity-80"
                   >
                     Join the Waitlist
                   </button>

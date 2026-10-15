@@ -1,15 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7e5d7;
-  --foreground: #180b02;
-  --ink: #0a0a0a;
+  --background: #dcdbd8; /* concrete grey, close to the lookbook's studio backdrop */
+  --foreground: #0a0a0a;
+  --ink: #0a0a0a; /* solid buttons and badges */
+  --paper: #ffffff; /* text on ink */
+  --line: rgb(10 10 10 / 0.15);
+  --field: rgb(255 255 255 / 0.5);
+  --danger: #b91c1c;
+}
+
+/* Dark theme: set by data-theme on <html> (see ThemeToggle). */
+:root[data-theme="dark"] {
+  --background: #0c0c0c;
+  --foreground: #ebeae6;
+  --ink: #ebeae6;
+  --paper: #0a0a0a;
+  --line: rgb(235 234 230 / 0.16);
+  --field: rgb(255 255 255 / 0.06);
+  --danger: #f87171;
+  color-scheme: dark;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-ink: var(--ink);
+  --color-paper: var(--paper);
+  --color-line: var(--line);
+  --color-field: var(--field);
+  --color-danger: var(--danger);
   --font-sans: var(--font-inter);
   --font-heading: var(--font-barlow);
 }
@@ -18,4 +38,33 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Home hero: the wordmark rises once on load; slide progress fills over the slide's duration. */
+@keyframes kw-rise {
+  from { transform: translateY(105%); }
+  to { transform: translateY(0); }
+}
+@keyframes kw-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.kw-rise {
+  animation: kw-rise 1.1s cubic-bezier(0.2, 0.7, 0.1, 1) 0.15s both;
+}
+.kw-progress {
+  transform-origin: left;
+  animation: kw-progress linear both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .kw-rise, .kw-progress { animation: none; }
+}
+
+/* Section headings: same rise as the wordmark, triggered on scroll (see Reveal.tsx). */
+.kw-reveal[data-state="hidden"] {
+  transform: translateY(105%);
+}
+.kw-reveal[data-state="shown"] {
+  transform: translateY(0);
+  transition: transform 1.1s cubic-bezier(0.2, 0.7, 0.1, 1);
 }

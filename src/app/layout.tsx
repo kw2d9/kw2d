@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Barlow, Inter } from "next/font/google";
 import "./globals.css";
+import { themeScript } from "@/lib/theme";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
 const barlow = Barlow({
@@ -16,7 +17,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${barlow.variable} antialiased`}>
+    <html lang="en" className={`${inter.variable} ${barlow.variable} antialiased`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="flex min-h-screen flex-col">
         {children}
       </body>

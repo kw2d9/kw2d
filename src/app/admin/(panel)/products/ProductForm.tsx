@@ -2,9 +2,11 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef, useState, useTransition } from "react";
+import { useCallback, useMemo, useRef, useState, useTransition } from "react";
 import { imageSrc } from "@/lib/images";
+import type { Product } from "@/lib/product-types";
 import { saveProduct } from "../../actions";
+import PreviewPanel from "./PreviewPanel";
 
 type VariantRow = { id?: string; size: string; inventory: number | null };
 
@@ -77,6 +79,27 @@ async function resize(file: File, maxEdge = 2000): Promise<File> {
   return blob ? new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", { type: "image/jpeg" }) : file;
 }
 
+/** The form state in the storefront's shape, for the preview. */
+function toPreview(p: InitialProduct): Product {
+  const blank = (v: string) => (v.trim() === "" ? null : v.trim());
+  return {
+    id: p.id ?? "preview",
+    handle: p.handle || "preview",
+    title: p.title.trim() || "Untitled product",
+    collection: blank(p.collection),
+    subtitle: blank(p.subtitle),
+    description: blank(p.description),
+    price_cents: Math.round((Number(p.price) || 0) * 100),
+    currency: "CAD",
+    images: p.images,
+    size_chart_image: p.size_chart_image,
+    preorder: p.preorder,
+    ships_note: blank(p.ships_note),
+    fit_note: blank(p.fit_note),
+    variants: p.variants.filter((v) => v.size.trim()).map((v, i) => ({ id: v.id ?? `preview-${i}`, size: v.size.trim(), inventory: v.inventory })),
+  };
+}
+
 async function upload(file: File): Promise<string> {
   const body = new FormData();
   body.set("file", await resize(file));
@@ -95,6 +118,9 @@ export default function ProductForm({ initial }: { initial?: InitialProduct }) {
   const [saving, startSave] = useTransition();
   const imgInput = useRef<HTMLInputElement>(null);
   const chartInput = useRef<HTMLInputElement>(null);
+  const [previewing, setPreviewing] = useState(false);
+  const preview = useMemo(() => toPreview(p), [p]);
+  const closePreview = useCallback(() => setPreviewing(false), []);
 
   const set = <K extends keyof InitialProduct>(k: K, v: InitialProduct[K]) => setP((s) => ({ ...s, [k]: v }));
 
@@ -315,8 +341,12 @@ export default function ProductForm({ initial }: { initial?: InitialProduct }) {
         <button disabled={saving || uploading} className="bg-neutral-900 px-6 py-2.5 text-sm font-semibold text-white disabled:opacity-50">
           {saving ? "Saving…" : initial?.id ? "Save changes" : "Create product"}
         </button>
+        <button type="button" onClick={() => setPreviewing(true)} className="border border-neutral-900 px-6 py-2.5 text-sm font-semibold">
+          Preview
+        </button>
         <button type="button" onClick={() => router.push("/admin")} className="text-sm underline">Cancel</button>
       </div>
+      {previewing && <PreviewPanel product={preview} sortOrder={Number(p.sort_order) || 0} active={p.active} onClose={closePreview} />}
     </form>
   );
 }

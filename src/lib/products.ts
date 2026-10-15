@@ -3,26 +3,11 @@ import { supabaseAdmin } from "@/lib/supabase";
 
 export { formatPrice } from "@/lib/format";
 
-export type Variant = { id: string; size: string; inventory: number | null };
-export type Product = {
-  id: string;
-  handle: string;
-  title: string;
-  collection: string | null;
-  subtitle: string | null;
-  description: string | null;
-  price_cents: number;
-  currency: string;
-  images: string[];
-  size_chart_image: string | null;
-  preorder: boolean;
-  ships_note: string | null;
-  fit_note: string | null;
-  variants: Variant[];
-};
+import type { Product, Variant } from "@/lib/product-types";
+export type { Product, Variant };
 
 const SELECT =
-  "id, handle, title, collection, subtitle, description, price_cents, currency, images, size_chart_image, preorder, ships_note, fit_note, variants:product_variants(id, size, inventory, sort_order)";
+  "id, handle, title, collection, subtitle, description, price_cents, currency, images, size_chart_image, preorder, ships_note, fit_note, sort_order, variants:product_variants(id, size, inventory, sort_order)";
 
 type Row = Omit<Product, "variants"> & { variants: (Variant & { sort_order: number })[] };
 

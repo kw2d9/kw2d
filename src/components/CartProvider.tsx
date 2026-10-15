@@ -34,27 +34,29 @@ export function useCart() {
   return c;
 }
 
-export default function CartProvider({ children }: { children: React.ReactNode }) {
+/** `persist={false}` keeps the cart in memory only (used by the admin preview). */
+export default function CartProvider({ children, persist = true }: { children: React.ReactNode; persist?: boolean }) {
   const [lines, setLines] = useState<CartLine[]>([]);
   const [open, setOpen] = useState(false);
   const [ready, setReady] = useState(false);
 
   // Hydrate after mount so server and client markup match on first render.
   useEffect(() => {
+    if (!persist) return;
     try {
       const raw = localStorage.getItem(KEY);
       // eslint-disable-next-line react-hooks/set-state-in-effect
       if (raw) setLines(JSON.parse(raw));
     } catch {}
     setReady(true);
-  }, []);
+  }, [persist]);
 
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || !persist) return;
     try {
       localStorage.setItem(KEY, JSON.stringify(lines));
     } catch {}
-  }, [lines, ready]);
+  }, [lines, ready, persist]);
 
   const add = useCallback((line: Omit<CartLine, "qty">) => {
     setLines((prev) => {

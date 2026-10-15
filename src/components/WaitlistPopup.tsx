@@ -69,7 +69,8 @@ export default function WaitlistPopup({ delayMs = 3000 }: { delayMs?: number }) 
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed bottom-6 left-6 z-[9998] border border-white/20 bg-ink px-4 py-2.5 text-[9px] font-bold uppercase tracking-[0.25em] text-white hover:opacity-70"
+          aria-label="Get 10% off: join the waitlist"
+          className="fixed right-0 top-1/2 z-[9998] -translate-y-1/2 rotate-180 border border-r-0 border-line bg-ink px-2.5 py-4 text-[9px] font-bold uppercase tracking-[0.25em] text-paper transition-[padding] [writing-mode:vertical-rl] hover:pl-3.5"
         >
           10% off
         </button>
@@ -82,7 +83,7 @@ export default function WaitlistPopup({ delayMs = 3000 }: { delayMs?: number }) 
           onClick={(e) => e.target === e.currentTarget && close()}
           className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/65 p-4 backdrop-blur-md"
         >
-          <div className="relative w-full max-w-[420px] border border-white/10 bg-ink px-8 pb-8 pt-11 text-white">
+          <div className="relative w-full max-w-[420px] border border-white/10 bg-[#0a0a0a] px-8 pb-8 pt-11 text-white">
             <button onClick={close} aria-label="Close" className="absolute right-5 top-5 text-white/40 hover:text-white/85">
               ✕
             </button>

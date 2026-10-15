@@ -42,3 +42,6 @@ next-env.d.ts
 
 # Old Shopify theme (reference only)
 /kw2d-theme/
+
+# Notes for the client (not part of the site)
+/things to send client.txt
